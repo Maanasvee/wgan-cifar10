@@ -9,7 +9,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0a0a0f;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:100vh}
 nav{background:#0f0f1a;border-bottom:1px solid #1e2035;padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.logo{font-weight:700;font-size:.95rem;color:#60a5fa;letter-spacing:.05em}
+.logo{font-weight:700;font-size:.95rem;color:#60a5fa}
 .nav-links{display:flex;gap:1.5rem;list-style:none}
 .nav-links a{color:#64748b;text-decoration:none;font-size:.8rem;transition:color .2s}
 .nav-links a:hover{color:#e2e8f0}
@@ -23,25 +23,17 @@ h1 span{color:#60a5fa}
 .card-value{font-size:1.8rem;font-weight:700;color:#60a5fa}
 .card-sub{font-size:.7rem;color:#64748b;margin-top:.25rem}
 .section{margin-bottom:3rem}
-.section-title{font-size:1.1rem;font-weight:600;margin-bottom:1.25rem;color:#e2e8f0}
+.section-title{font-size:1.1rem;font-weight:600;margin-bottom:1.25rem}
 .compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .compare-box{background:#0f0f1a;border:1px solid #1e2035;border-radius:12px;padding:1.5rem}
-.compare-box.wgan{border-color:#3b82f620;background:linear-gradient(135deg,#60a5fa08,#0f0f1a)}
 .compare-box h3{font-size:.9rem;font-weight:600;margin-bottom:1.25rem}
 .compare-box.gan h3{color:#f87171}
 .compare-box.wgan h3{color:#60a5fa}
 .row{display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid #1e2035;font-size:.8rem}
 .row:last-child{border:none}
 .row .key{color:#64748b}
-.row .val{font-weight:500}
 .good{color:#34d399}
 .bad{color:#f87171}
-.chart-box{background:#0f0f1a;border:1px solid #1e2035;border-radius:12px;padding:1.5rem}
-.chart-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem}
-.chart-top h3{font-size:.9rem;font-weight:600}
-.legend{display:flex;gap:1.25rem}
-.leg{display:flex;align-items:center;gap:6px;font-size:.7rem;color:#64748b}
-.leg-dot{width:8px;height:8px;border-radius:50%}
 .sim-box{background:#0f0f1a;border:1px solid #1e2035;border-radius:12px;overflow:hidden;margin-bottom:1.5rem}
 .sim-bar{background:#161625;border-bottom:1px solid #1e2035;padding:.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between}
 .dots{display:flex;gap:6px}
@@ -54,7 +46,7 @@ h1 span{color:#60a5fa}
 .log .ok{color:#34d399}
 .log .inf{color:#a78bfa}
 .prog{margin-bottom:.875rem}
-.prog-top{display:flex;justify-content:space-between;font-size:.7rem;color:#64748b;font-family:'JetBrains Mono',monospace;margin-bottom:5px}
+.prog-top{display:flex;justify-content:space-between;font-size:.7rem;color:#64748b;margin-bottom:5px}
 .prog-bar{height:5px;background:#1e2035;border-radius:100px;overflow:hidden}
 .prog-fill{height:100%;border-radius:100px;transition:width .4s}
 .fill-blue{background:linear-gradient(90deg,#3b82f6,#60a5fa)}
@@ -63,8 +55,15 @@ h1 span{color:#60a5fa}
 .btn{padding:.6rem 1.25rem;border-radius:8px;font-size:.8rem;cursor:pointer;border:none;font-family:'Inter',sans-serif;font-weight:500;transition:all .2s}
 .btn-blue{background:#3b82f6;color:#fff}
 .btn-blue:hover{background:#2563eb}
+.btn-blue:disabled{background:#1e3a5f;color:#64748b;cursor:not-allowed}
 .btn-out{background:transparent;color:#e2e8f0;border:1px solid #1e2035}
 .btn-out:hover{border-color:#3b82f6;color:#60a5fa}
+.chart-box{background:#0f0f1a;border:1px solid #1e2035;border-radius:12px;padding:1.5rem}
+.chart-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem}
+.chart-top h3{font-size:.9rem;font-weight:600}
+.legend{display:flex;gap:1.25rem}
+.leg{display:flex;align-items:center;gap:6px;font-size:.7rem;color:#64748b}
+.leg-dot{width:8px;height:8px;border-radius:50%}
 </style>
 </head>
 <body>
@@ -82,7 +81,7 @@ h1 span{color:#60a5fa}
 
   <div class="cards">
     <div class="card"><div class="card-label">Dataset</div><div class="card-value">50K</div><div class="card-sub">CIFAR-10 images</div></div>
-    <div class="card"><div class="card-label">Image Size</div><div class="card-value">32²</div><div class="card-sub">RGB 3-channel</div></div>
+    <div class="card"><div class="card-label">Image Size</div><div class="card-value">64²</div><div class="card-sub">RGB 3-channel</div></div>
     <div class="card"><div class="card-label">Latent Dim</div><div class="card-value">100</div><div class="card-sub">noise vector z</div></div>
     <div class="card"><div class="card-label">Critic Steps</div><div class="card-value">5×</div><div class="card-sub">per generator step</div></div>
   </div>
@@ -92,21 +91,21 @@ h1 span{color:#60a5fa}
     <div class="compare">
       <div class="compare-box gan">
         <h3>Vanilla GAN</h3>
-        <div class="row"><span class="key">Loss</span><span class="val bad">Binary Cross-Entropy</span></div>
-        <div class="row"><span class="key">Output</span><span class="val bad">Sigmoid → [0,1]</span></div>
-        <div class="row"><span class="key">Constraint</span><span class="val bad">None</span></div>
-        <div class="row"><span class="key">Optimizer</span><span class="val">Adam</span></div>
-        <div class="row"><span class="key">Mode Collapse</span><span class="val bad">Common</span></div>
-        <div class="row"><span class="key">Loss Meaning</span><span class="val bad">Uninformative</span></div>
+        <div class="row"><span class="key">Loss</span><span class="bad">Binary Cross-Entropy</span></div>
+        <div class="row"><span class="key">Output</span><span class="bad">Sigmoid → [0,1]</span></div>
+        <div class="row"><span class="key">Constraint</span><span class="bad">None</span></div>
+        <div class="row"><span class="key">Optimizer</span><span>Adam</span></div>
+        <div class="row"><span class="key">Mode Collapse</span><span class="bad">Common</span></div>
+        <div class="row"><span class="key">Loss Meaning</span><span class="bad">Uninformative</span></div>
       </div>
       <div class="compare-box wgan">
         <h3>Wasserstein GAN</h3>
-        <div class="row"><span class="key">Loss</span><span class="val good">Wasserstein Distance</span></div>
-        <div class="row"><span class="key">Output</span><span class="val good">Raw score (no sigmoid)</span></div>
-        <div class="row"><span class="key">Constraint</span><span class="val good">Weight Clipping ±0.01</span></div>
-        <div class="row"><span class="key">Optimizer</span><span class="val good">RMSProp</span></div>
-        <div class="row"><span class="key">Mode Collapse</span><span class="val good">Rare</span></div>
-        <div class="row"><span class="key">Loss Meaning</span><span class="val good">Correlates with quality</span></div>
+        <div class="row"><span class="key">Loss</span><span class="good">Wasserstein Distance</span></div>
+        <div class="row"><span class="key">Output</span><span class="good">Raw score (no sigmoid)</span></div>
+        <div class="row"><span class="key">Constraint</span><span class="good">Weight Clipping ±0.01</span></div>
+        <div class="row"><span class="key">Optimizer</span><span class="good">RMSProp</span></div>
+        <div class="row"><span class="key">Mode Collapse</span><span class="good">Rare</span></div>
+        <div class="row"><span class="key">Loss Meaning</span><span class="good">Correlates with quality</span></div>
       </div>
     </div>
   </div>
@@ -124,9 +123,7 @@ h1 span{color:#60a5fa}
         <div class="status" id="status">● IDLE</div>
       </div>
       <div class="sim-body">
-        <div class="log" id="log">
-          <span class="inf">// Click Start Training to simulate the WGAN loop</span><br/>
-        </div>
+        <div class="log" id="log"><span class="inf">// Click Start Training to simulate the WGAN loop</span><br/></div>
         <div class="prog">
           <div class="prog-top"><span>Epoch Progress</span><span id="elbl">0 / 50</span></div>
           <div class="prog-bar"><div class="prog-fill fill-blue" id="ebar" style="width:0%"></div></div>
@@ -153,130 +150,101 @@ h1 span{color:#60a5fa}
           <div class="leg"><div class="leg-dot" style="background:#f472b6"></div>Generator</div>
         </div>
       </div>
-      <canvas id="chart" height="180"></canvas>
+      <canvas id="myChart" height="180"></canvas>
     </div>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
-const logEl=document.getElementById('log');
-const ebar=document.getElementById('ebar');
-const elbl=document.getElementById('elbl');
-const cbar=document.getElementById('cbar');
-const clbl=document.getElementById('clbl');
-const status=document.getElementById('status');
-const startBtn=document.getElementById('startBtn');
-let interval=null,epoch=0;
-const cLosses=[],gLosses=[];
+var logEl=document.getElementById('log');
+var ebar=document.getElementById('ebar');
+var elbl=document.getElementById('elbl');
+var cbar=document.getElementById('cbar');
+var clbl=document.getElementById('clbl');
+var statusEl=document.getElementById('status');
+var startBtn=document.getElementById('startBtn');
+var interval=null;
+var epoch=0;
+var cLosses=[];
+var gLosses=[];
 
-const chart=new Chart(document.getElementById('chart'),{
+var myChart=new Chart(document.getElementById('myChart'),{
   type:'line',
-  data:{labels:[],datasets:[
-    {label:'Critic',data:[],borderColor:'#60a5fa',backgroundColor:'rgba(96,165,250,0.08)',fill:true,tension:0.4,pointRadius:2,borderWidth:2},
-    {label:'Generator',data:[],borderColor:'#f472b6',backgroundColor:'rgba(244,114,182,0.08)',fill:true,tension:0.4,pointRadius:2,borderWidth:2}
-  ]},
-  options:{responsive:true,animation:{duration:200},plugins:{legend:{display:false}},
-    scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#64748b',font:{size:10},maxTicksLimit:10}},
-            y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#64748b',font:{size:10}}}}}
+  data:{
+    labels:[],
+    datasets:[
+      {label:'Critic',data:[],borderColor:'#60a5fa',backgroundColor:'rgba(96,165,250,0.08)',fill:true,tension:0.4,pointRadius:2,borderWidth:2},
+      {label:'Generator',data:[],borderColor:'#f472b6',backgroundColor:'rgba(244,114,182,0.08)',fill:true,tension:0.4,pointRadius:2,borderWidth:2}
+    ]
+  },
+  options:{
+    responsive:true,
+    animation:{duration:200},
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#64748b',font:{size:10},maxTicksLimit:10}},
+      y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#64748b',font:{size:10}}}
+    }
+  }
 });
 
 function startSim(){
-  if(interval)return;
-  startBtn.textContent='⏸ Running…';startBtn.disabled=true;
-  status.textContent='● TRAINING';status.style.color='#34d399';
-  interval=setInterval(()=>{
+  if(interval) return;
+  startBtn.textContent='⏸ Running…';
+  startBtn.disabled=true;
+  statusEl.textContent='● TRAINING';
+  interval=setInterval(function(){
+    if(epoch>=50){
+      clearInterval(interval);
+      interval=null;
+      logEl.innerHTML+='<span class="inf">✓ Training complete!</span><br/>';
+      statusEl.textContent='● DONE';
+      return;
+    }
     epoch++;
-    const cl=(-4+(epoch/50)*3.5+((Math.random()-.5)*.4)).toFixed(4);
-    const gl=(3-(epoch/50)*2.5+((Math.random()-.5)*.3)).toFixed(4);
-    cLosses.push(parseFloat(cl));gLosses.push(parseFloat(gl));
-    ebar.style.width=(epoch/50*100)+'%';elbl.textContent=epoch+' / 50';
-    let s=0;const ca=setInterval(()=>{s++;cbar.style.width=(s/5*100)+'%';clbl.textContent=s+' / 5';if(s>=5)clearInterval(ca);},80);
-    logEl.innerHTML+=`<span class="ep">Epoch [${String(epoch).padStart(2,'0')}/50]</span> Critic: <span class="ok">${cl}</span>  Gen: <span class="ok">${gl}</span>${epoch%5===0?' <span class="inf">→ image saved</span>':''}<br/>`;
+    var cl=(-4+(epoch/50)*3.5+((Math.random()-0.5)*0.4)).toFixed(4);
+    var gl=(3-(epoch/50)*2.5+((Math.random()-0.5)*0.3)).toFixed(4);
+    cLosses.push(parseFloat(cl));
+    gLosses.push(parseFloat(gl));
+    ebar.style.width=(epoch/50*100)+'%';
+    elbl.textContent=epoch+' / 50';
+    var s=0;
+    var ca=setInterval(function(){
+      s++;
+      cbar.style.width=(s/5*100)+'%';
+      clbl.textContent=s+' / 5';
+      if(s>=5) clearInterval(ca);
+    },80);
+    var saved=epoch%5===0?' <span class="inf">→ image saved</span>':'';
+    logEl.innerHTML+='<span class="ep">Epoch ['+String(epoch).padStart(2,'0')+'/50]</span> Critic: <span class="ok">'+cl+'</span>  Gen: <span class="ok">'+gl+'</span>'+saved+'<br/>';
     logEl.scrollTop=logEl.scrollHeight;
-    chart.data.labels=Array.from({length:epoch},(_,i)=>'E'+(i+1));
-    chart.data.datasets[0].data=[...cLosses];chart.data.datasets[1].data=[...gLosses];
-    chart.update();
-    if(epoch>=50){clearInterval(interval);interval=null;logEl.innerHTML+='<span class="inf">✓ Training complete!</span><br/>';status.textContent='● DONE';}
-  },280);
+    myChart.data.labels=Array.from({length:epoch},function(_,i){return 'E'+(i+1);});
+    myChart.data.datasets[0].data=cLosses.slice();
+    myChart.data.datasets[1].data=gLosses.slice();
+    myChart.update();
+  },300);
 }
 
 function resetSim(){
-  clearInterval(interval);interval=null;epoch=0;cLosses.length=0;gLosses.length=0;
-  ebar.style.width='0%';elbl.textContent='0 / 50';cbar.style.width='0%';clbl.textContent='0 / 5';
-  status.textContent='● IDLE';status.style.color='#34d399';
-  startBtn.textContent='▶ Start Training';startBtn.disabled=false;
+  clearInterval(interval);
+  interval=null;
+  epoch=0;
+  cLosses=[];
+  gLosses=[];
+  ebar.style.width='0%';
+  elbl.textContent='0 / 50';
+  cbar.style.width='0%';
+  clbl.textContent='0 / 5';
+  statusEl.textContent='● IDLE';
+  startBtn.textContent='▶ Start Training';
+  startBtn.disabled=false;
   logEl.innerHTML='<span class="inf">// Reset. Click Start Training.</span><br/>';
-  chart.data.labels=[];chart.data.datasets[0].data=[];chart.data.datasets[1].data=[];chart.update();
+  myChart.data.labels=[];
+  myChart.data.datasets[0].data=[];
+  myChart.data.datasets[1].data=[];
+  myChart.update();
 }
 </script>
 </body>
 </html>
-```
-
----
-
-## STEP 8 — Run the Backend
-
-In terminal (make sure you see **(venv)**):
-```
-python wgan.py
-```
-
-It will download CIFAR-10 automatically and start printing epochs. Let it run.
-
----
-
-## STEP 9 — Preview the Frontend
-
-Right-click **index.html** in the VS Code sidebar → click **"Open with Live Server"**.
-
-Your dashboard opens in the browser. ✅
-
----
-
-## STEP 10 — Git Setup
-
-Paste these one by one:
-```
-git init
-```
-```
-git add .
-```
-```
-git commit -m "initial commit: WGAN CIFAR-10 project"
-```
-
----
-
-## STEP 11 — Push to GitHub
-
-1. Go to **github.com** → sign in → click **"+"** → **"New repository"**
-2. Name it `wgan-cifar10` → keep it Public → click **"Create repository"**
-3. Come back to terminal and paste (replace `YourUsername`):
-```
-git remote add origin https://github.com/YourUsername/wgan-cifar10.git
-```
-```
-git branch -M main
-```
-```
-git push -u origin main
-```
-
-It will ask for your GitHub username and password. For password — use a **Personal Access Token** (GitHub → Settings → Developer settings → Personal access tokens → Generate new token → check `repo` → copy it → paste as password).
-
----
-
-## STEP 12 — Every Time You Change Something
-
-Just run these 3 lines:
-```
-git add .
-```
-```
-git commit -m "describe what you changed"
-```
-```
-git push
