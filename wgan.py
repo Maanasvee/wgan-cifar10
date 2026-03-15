@@ -13,13 +13,14 @@ LATENT_DIM   = 100
 IMG_CHANNELS = 3
 FEATURES_G   = 64
 FEATURES_D   = 64
-BATCH_SIZE   = 64
+BATCH_SIZE   = 128
 NUM_EPOCHS   = 50
 LR           = 0.00005
 CLIP_VALUE   = 0.01
-N_CRITIC     = 5
+N_CRITIC     = 2
 IMG_SIZE     = 64
 DEVICE       = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print("Device:", DEVICE)
 
 class Generator(nn.Module):
     def __init__(self):
@@ -82,12 +83,11 @@ def get_loader():
         root='./data', train=True, download=True, transform=transform
     )
     return DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True,
-                      num_workers=0, drop_last=True)
+                      num_workers=2, drop_last=True)
 
 def train():
-    os.makedirs("outputs/samples",     exist_ok=True)
-    os.makedirs("outputs/checkpoints", exist_ok=True)
-    os.makedirs("outputs/logs",        exist_ok=True)
+    os.makedirs("samples", exist_ok=True)
+    os.makedirs("logs",    exist_ok=True)
 
     gen    = Generator().to(DEVICE)
     critic = Critic().to(DEVICE)
@@ -101,9 +101,9 @@ def train():
     fixed_noise = torch.randn(64, LATENT_DIM, 1, 1).to(DEVICE)
     history     = {"critic_loss": [], "gen_loss": []}
 
-    print("\n" + "="*50)
-    print("  WGAN on CIFAR-10  |  Device: " + str(DEVICE))
-    print("="*50 + "\n")
+    print("="*50)
+    print("WGAN on CIFAR-10  |  Device:", DEVICE)
+    print("="*50)
 
     for epoch in range(1, NUM_EPOCHS + 1):
         t0 = time.time()
@@ -137,24 +137,20 @@ def train():
         history["gen_loss"].append(avg_g)
 
         print("Epoch [" + str(epoch).rjust(3) + "/" + str(NUM_EPOCHS) + "]  "
-              "Critic: " + str(round(avg_c, 4)) + "  "
-              "Gen: "    + str(round(avg_g, 4)) + "  "
-              "Time: "   + str(round(time.time()-t0, 1)) + "s")
+              "Critic: " + str(round(avg_c,4)) + "  "
+              "Gen: "    + str(round(avg_g,4)) + "  "
+              "Time: "   + str(round(time.time()-t0,1)) + "s")
 
-        if epoch % 5 == 0:
-            with torch.no_grad():
-                fake = gen(fixed_noise)
-            torchvision.utils.save_image(
-                fake,
-                "outputs/samples/epoch_" + str(epoch).zfill(3) + ".png",
-                normalize=True, nrow=8
-            )
-            torch.save(gen.state_dict(),
-                       "outputs/checkpoints/gen_epoch_" + str(epoch).zfill(3) + ".pt")
+        with torch.no_grad():
+            fake = gen(fixed_noise)
+        torchvision.utils.save_image(
+            fake,
+            "samples/epoch_" + str(epoch).zfill(3) + ".png",
+            normalize=True, nrow=8
+        )
 
-    with open("outputs/logs/history.json", "w") as f:
+    with open("logs/history.json", "w") as f:
         json.dump(history, f, indent=2)
-    print("\nDone! Check outputs/samples/ for generated images.")
+    print("Done!")
 
-if __name__ == "__main__":
-    train()
+train()
